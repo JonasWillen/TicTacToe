@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct TicTacToeApp: App {
+    @StateObject private var theViewModel = TicTacToeVM()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(theViewModel)
         }
     }
 }
