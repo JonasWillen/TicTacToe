@@ -45,7 +45,11 @@ struct Marker: View {
 
 struct Marker_Previews: PreviewProvider {
     static var previews: some View {
-        Marker(marker:2, id: 1)
-           .environmentObject(TicTacToeVM())
+        Group{
+            Marker(marker:2, id: 1)
+                .environmentObject(TicTacToeVM())
+            Marker(marker:1, id: 1)
+                .environmentObject(TicTacToeVM())
+        }
     }
 }

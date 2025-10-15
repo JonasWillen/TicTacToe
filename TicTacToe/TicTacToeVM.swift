@@ -7,11 +7,14 @@
 
 import Foundation
 
+@MainActor
 class TicTacToeVM : ObservableObject {
-    var theModel = TicTacToeModel()
+    // Handles the model
+    private var theModel = TicTacToeModel()
+    // Handle convertions between model and view
     @Published var markers : [aMarker] = initMarkers()
-   
-    private let voice = VoiceIO()
+    //Handels other IO handling like Voice, Networking, ...
+    private let voice : VoiceIO = VoiceIO()
     
     
     func resetGame(){
@@ -25,7 +28,11 @@ class TicTacToeVM : ObservableObject {
         let res = theModel.aMove(position: position)
         if res != 0 {
             markers[position].state = res
-            voice.speech(tile: res)
+            if (res == 1){
+                voice.speakCircle()
+            }else{
+                voice.speakCross()
+            }
             let count = theModel.count
             DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                 self.hurryUP(moves: count)
@@ -37,7 +44,7 @@ class TicTacToeVM : ObservableObject {
     func hurryUP(moves: Int){
         print("moves: \(moves) ModelMoves: \(theModel.count)")
         if moves == theModel.count && moves < 10 {
-            voice.speech(tile: 3)
+            voice.speakTheString(theString: "Time to place a marker")
         }
     }
     
@@ -49,13 +56,7 @@ class TicTacToeVM : ObservableObject {
         return theModel.checkWinner()
         
     }
-    
-    
-    // IO handling
-    
-    // Do voice here 
-    
-    
+
 }
 
 func initMarkers() -> [aMarker] {
@@ -80,5 +81,4 @@ struct aMarker: Hashable, Codable, Identifiable {
     var x: Int
     var y: Int
 }
-
 
